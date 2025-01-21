@@ -1,7 +1,29 @@
+"use client";
+
 import HeaderPage from "@/components/header-page";
 import Image from "next/image";
+import { useCart } from "@/app/context/CartContext";
+import { useEffect, useState } from "react";
 
 export default function Checkout() {
+  const { cartItems } = useCart();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+      </div>
+    );
+  }
+
+  const subtotal = cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+  const total = subtotal;
+
   return (
     <main>
       <HeaderPage />
@@ -19,7 +41,7 @@ export default function Checkout() {
       </div>
 
       <div className="flex flex-col md:flex-row px-6 md:px-32 py-16 gap-12">
-        {/* Billing Details Form */}
+        {/* Billing Details Form - Restored Full Structure */}
         <form className="flex flex-col text-sm font-semibold gap-y-6 md:w-1/2">
           <legend className="text-2xl font-semibold">Billing details</legend>
           <div className="flex flex-col md:flex-row gap-x-12 mt-10">
@@ -33,14 +55,12 @@ export default function Checkout() {
             </div>
           </div>
 
-          {/* Rest of the form fields */}
           <label htmlFor="company" className="mt-2">Company Name (Optional)</label>
           <input className="border-2 px-5 py-3 rounded-lg w-full md:w-[300px]" type="text" name="company" id="company" />
 
           <label htmlFor="country-select" className="mt-2">Country / Region</label>
           <select className="border-2 px-5 py-3 rounded-lg w-full md:w-[300px]" id="country-select" name="countries">
             <option disabled defaultValue={"Select a country"}></option>
-            {/* Country options */}
             <option value="United States">United States</option>
             <option value="Canada">Canada</option>
             <option value="Australia">Australia</option>
@@ -57,36 +77,36 @@ export default function Checkout() {
           <label htmlFor="address" className="mt-2">Street Address</label>
           <input required className="border-2 px-5 py-3 rounded-lg w-full md:w-[300px]" type="text" name="address" id="address" />
 
-          <label htmlFor="home" className="mt-2">Town / City</label>
-          <input required className="border-2 px-5 py-3 rounded-lg w-full md:w-[300px]" type="text" name="home" id="home" />
+          <label htmlFor="town-city" className="mt-2">Town / City</label>
+          <input required className="border-2 px-5 py-3 rounded-lg w-full md:w-[300px]" type="text" name="town-city" id="town-city" />
 
           <label htmlFor="province" className="mt-2">Province</label>
           <select className="border-2 px-5 py-3 rounded-lg w-full md:w-[300px]" id="province" name="province">
             <option disabled defaultValue={"Select a Province"}></option>
-            {/* Province options */}
-            <option value="United States">United States</option>
-            <option value="Canada">Canada</option>
-            <option value="Pakistan">Pakistan</option>
-            <option value="Australia">Australia</option>
-            <option value="United Kingdom">United Kingdom</option>
-            <option value="Germany">Germany</option>
-            <option value="India">India</option>
-            <option value="China">China</option>
-            <option value="Japan">Japan</option>
-            <option value="France">France</option>
-            <option value="Brazil">Brazil</option>
+            <option value="California">California</option>
+            <option value="Ontario">Ontario</option>
+            <option value="Sindh">Sindh</option>
+            <option value="New South Wales">New South Wales</option>
+            <option value="England">England</option>
+            <option value="Bavaria">Bavaria</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Beijing">Beijing</option>
+            <option value="Tokyo">Tokyo</option>
+            <option value="Île-de-France">Île-de-France</option>
+            <option value="São Paulo">São Paulo</option>
           </select>
 
           <label htmlFor="zip" className="mt-2">Zip Code</label>
           <input required className="border-2 px-5 py-3 rounded-lg w-full md:w-[300px]" type="number" name="zip" id="zip" />
 
           <label htmlFor="phone" className="mt-2">Phone</label>
-          <input required className="border-2 px-5 py-3 rounded-lg w-full md:w-[300px]" type="number" name="phone" id="phone" />
+          <input required className="border-2 px-5 py-3 rounded-lg w-full md:w-[300px]" type="tel" name="phone" id="phone" />
 
           <label htmlFor="mail" className="mt-2">Email Address</label>
           <input required className="border-2 px-5 py-3 rounded-lg w-full md:w-[300px]" type="email" name="mail" id="mail" />
 
-          <input required className="w-full mt-5 border-2 px-5 py-3 rounded-lg md:w-[300px]" type="text" name="home" id="home" placeholder="Additional Information" />
+          <label htmlFor="additional-info" className="mt-2">Additional Information</label>
+          <input className="w-full border-2 px-5 py-3 rounded-lg md:w-[300px]" type="text" name="additional-info" id="additional-info" placeholder="Optional" />
         </form>
 
         {/* Order Summary */}
@@ -94,34 +114,80 @@ export default function Checkout() {
           <div className="flex py-7 border-b-2 justify-between">
             <div className="flex flex-col gap-4">
               <h2 className="text-2xl font-semibold">Product</h2>
-              <p className="text-sm text-gray-400">Asgard sofa <span className="text-black font-medium">x 1</span></p>
-              <p className="text-sm font-medium">Subtotal</p>
+              {cartItems.map((item) => (
+                <p key={item.product.id} className="text-sm text-gray-400">
+                  {item.product.name} <span className="text-black font-medium">x {item.quantity}</span>
+                </p>
+              ))}
+              <p className="text-sm font-medium mt-4">Subtotal</p>
               <p className="text-sm font-medium">Total</p>
             </div>
 
             <div className="flex flex-col text-right gap-4">
-              <h2 className="text-2xl font-semibold">Subtotal</h2>
-              <p className="text-sm font-medium">Rs.250,000.00</p>
-              <p className="text-sm font-medium">Rs.250,000.00</p>
-              <h2 className="text-2xl font-medium text-yellow-600">Rs.250,000.00</h2>
+              <h2 className="text-2xl font-semibold">Amount</h2>
+              {cartItems.map((item) => (
+                <p key={item.product.id} className="text-sm font-medium">
+                  Rs.{(item.product.price * item.quantity).toLocaleString()}
+                </p>
+              ))}
+              <p className="text-sm font-medium mt-4">Rs.{subtotal.toLocaleString()}</p>
+              <h2 className="text-2xl font-medium text-yellow-600">
+                Rs.{total.toLocaleString()}
+              </h2>
             </div>
           </div>
 
           <div className="flex flex-col py-4 gap-y-3">
             <h1 className="text-lg font-semibold flex items-center gap-x-2">
-              <div className="w-4 h-4 bg-black rounded-full"></div> Direct Bank Transfer
+              <div className="w-4 h-4 bg-black rounded-full"></div> 
+              Payment Method
             </h1>
-            <p className="text-gray-400 tracking-wide">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
-            <div>
-              <input className="mr-2" type="radio" name="dbt" id="dbt" />
-              <label className="text-gray-400 tracking-wide font-semibold" htmlFor="dbt">Direct Bank Transfer</label>
+            
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <input 
+                  type="radio" 
+                  name="payment" 
+                  id="dbt" 
+                  value="dbt"
+                  className="mr-2"
+                  defaultChecked
+                />
+                <label htmlFor="dbt" className="text-gray-600 font-medium">
+                  Direct Bank Transfer
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input 
+                  type="radio" 
+                  name="payment" 
+                  id="cod" 
+                  value="cod"
+                  className="mr-2"
+                />
+                <label htmlFor="cod" className="text-gray-600 font-medium">
+                  Cash On Delivery
+                </label>
+              </div>
             </div>
-            <div>
-              <input className="mr-2" type="radio" name="con" id="con" />
-              <label className="text-gray-400 tracking-wide font-semibold" htmlFor="con">Cash On Delivery</label>
-            </div>
-            <p>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our <b>privacy policy.</b></p>
-            <button className="text-lg px-10 border-[1px] border-black py-2 rounded-xl transition-all duration-200 cursor-pointer hover:bg-black hover:text-white active:opacity-80 w-full md:w-auto">Place order</button>
+
+            <p className="text-sm text-gray-500 mt-4">
+              Your personal data will be used to process your order, support your experience 
+              throughout this website, and for other purposes described in our{' '}
+              <a href="/privacy" className="text-blue-600 hover:underline">privacy policy</a>.
+            </p>
+
+            <button 
+              className={`text-lg px-10 border-2 py-3 rounded-xl transition-colors duration-200 ${
+                cartItems.length === 0 
+                  ? 'bg-gray-300 border-gray-300 cursor-not-allowed' 
+                  : 'border-black hover:bg-black hover:text-white'
+              }`}
+              disabled={cartItems.length === 0}
+              type="submit"
+            >
+              Place Order
+            </button>
           </div>
         </div>
       </div>

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "tags": [
+    {
+      "name": "tailwind",
+      "description": "Tailwind CSS directives",
+      "attributes": [
+        {
+          "name": "apply",
+          "description": "Apply utility classes"
+        }
+      ]
+    }
+  ]
+}
