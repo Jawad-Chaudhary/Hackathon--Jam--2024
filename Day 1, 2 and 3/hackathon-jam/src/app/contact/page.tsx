@@ -17,6 +17,8 @@ export default function Contact() {
           />
           <h1 className="text-4xl font-medium">Contact</h1>
           <p className="font-medium text-base mt-4">Home &gt; Contact</p>
+          
+
         </div>
       </div>
 

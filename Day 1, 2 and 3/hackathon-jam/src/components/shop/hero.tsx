@@ -201,7 +201,7 @@ export default function ShopPage() {
           {filteredProducts.map((product) => (
             <Link 
               href={`/product/${product.slug}`} 
-              key={product.id}
+              key={product.slug}
               className="group relative bg-white p-4 rounded-lg shadow-sm hover:shadow-lg transition-shadow"
             >
               <div className="aspect-square w-full relative overflow-hidden">

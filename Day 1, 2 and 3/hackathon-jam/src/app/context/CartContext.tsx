@@ -6,7 +6,9 @@ import { IProduct } from "@/components/shop/hero";
 interface CartItem {
   product: IProduct;
   quantity: number;
+      
 }
+
 
 interface CartContextType {
   cartItems: CartItem[];

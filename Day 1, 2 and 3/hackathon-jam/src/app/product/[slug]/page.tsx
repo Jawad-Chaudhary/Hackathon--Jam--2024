@@ -7,23 +7,30 @@ import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import Link from "next/link";
 
+import { groq } from "next-sanity";
+
 // Generate static params for dynamic routes
-export async function generateStaticParams() {
-  const products = await client.fetch<{ slug: string }[]>(
-    `*[_type == "product"]{ "slug": slug.current }`
-  );
+// export async function generateStaticParams() {
+//   const products = await client.fetch<{ slug: string }[]>(
+//     `*[_type == "product"]{ "slug": slug.current }`
+//   );
 
-  return products.map((product) => ({ slug: product.slug }));
+//   return products.map((product) => ({ slug: product.slug }));
+// }
+
+// // Define proper TypeScript interfaces
+// interface PageParams {
+//   slug: string;
+// }
+
+
+interface ProductPageProps {
+  params: Promise<{ slug: string }>;
 }
 
-// Define proper TypeScript interfaces
-interface PageParams {
-  slug: string;
-}
-
-// Main page component
-export default async function Page({ params }: { params: PageParams }) {
-  const query = `*[_type == "product" && slug.current == $slug][0]{
+async function getProduct(slug: string): Promise<IProduct> {
+  return client.fetch(
+      groq`*[_type == "product" && slug.current == $slug][0]{
     "id":_id,
     name,
     "slug":slug.current,
@@ -34,9 +41,14 @@ export default async function Page({ params }: { params: PageParams }) {
     stockLevel,
     category,
     "image":image.asset._ref
-  }`;
+  }`, { slug }
+  );
+}
 
-  const product: IProduct = await client.fetch(query, { slug: params.slug });
+// Main page component
+export default async function Page({ params }: ProductPageProps) {
+  const slug = await params;
+  const product = await getProduct(slug.slug);
 
   return (
     <main>
@@ -60,6 +72,7 @@ export default async function Page({ params }: { params: PageParams }) {
               height={800}
               className="w-full h-auto object-cover md:w-[700px] md:h-auto"
               priority
+              
             />
           </div>
           <ClientProductDetails product={product} />
