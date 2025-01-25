@@ -1,0 +1,6 @@
+Test Case ID,Test Case Description,Test Steps,Expected Result,Actual Result,Status,Severity Level,Assigned To,Remarks
+TC-01,Verify responsiveness across devices,"1. Open Chrome DevTools. 2. Toggle device toolbar. 3. Test on mobile/tablet views.",UI adapts to screen sizes,Responsive on all devices,Passed,Medium,Dev Team,Tested iOS/Android breakpoints
+TC-02,Validate cart persistence,"1. Add item to cart. 2. Refresh page.",Cart retains added item,Item retained after refresh,Passed,High,Dev Team,Used localStorage for state
+TC-03,Test checkout process,"1. Add item to cart. 2. Click checkout. 3. Submit dummy payment.",Redirects to confirmation page,Redirected successfully,Passed,High,Dev Team,Mocked Stripe integration
+TC-04,Sanity API response time,"1. Fetch `/products` via Thunder Client. 2. Measure response time.",Response < 500ms,450ms avg response,Passed,Medium,Dev Team,Cached GROQ queries
+TC-05,Real-time search with filters,"1. Type ""chair"" in search bar. 2. Select ""Chair"" category filter.",Displays matching chairs,Correct results shown,Passed,Medium,Dev Team,Debounced search

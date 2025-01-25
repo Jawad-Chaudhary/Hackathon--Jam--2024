@@ -6,23 +6,7 @@ import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import Link from "next/link";
-
 import { groq } from "next-sanity";
-
-// Generate static params for dynamic routes
-// export async function generateStaticParams() {
-//   const products = await client.fetch<{ slug: string }[]>(
-//     `*[_type == "product"]{ "slug": slug.current }`
-//   );
-
-//   return products.map((product) => ({ slug: product.slug }));
-// }
-
-// // Define proper TypeScript interfaces
-// interface PageParams {
-//   slug: string;
-// }
-
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
